@@ -4,7 +4,7 @@
 # aMAZEing
 
 import sys
-from os import system
+from os import path, system
 from mazeGeneration import Maze
 
 class stlMazeWriter():
@@ -14,11 +14,13 @@ class stlMazeWriter():
 
     def writeSTL(self, filename):
         # write paths
-        scadFilename = '../mazes/' + filename + '.scad'
-        stlFilename = '../mazes/' + filename + '.stl'
+        head, tail = path.split(path.abspath(sys.argv[0]))
+        scadFilename = path.join(head, '../mazes/' + filename + '.scad')
+        stlFilename = path.join(head, '../mazes/' + filename + '.stl')
 
         # write OpenSCAD file
-        scadHeaderFile = open('../resources/scadHeader.txt', 'r')
+        scadHeaderFilepath = path.join(head, '../resources/scadHeader.txt')
+        scadHeaderFile = open(scadHeaderFilepath, 'r')
         scadHeader = scadHeaderFile.read(-1)
         scadHeaderFile.close()
         scadFile = open(scadFilename, 'w')
@@ -41,7 +43,7 @@ class stlMazeWriter():
         # generate STL file using OpenSCAD
         system('openscad -o ' + stlFilename + ' ' + scadFilename)
 
-newMaze = Maze(25, 30)
+newMaze = Maze(5, 7)
 newMaze.generate()
 newMaze.validate()
 

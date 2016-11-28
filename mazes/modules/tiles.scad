@@ -31,7 +31,7 @@ module tile (width=12, u=false, r=false, d=false, l=false) {
 
         // minus track curve
         render() union() {
-            if (!(u&&d) && !(r&&l)) {
+            if (!(!u&&!d) && !(!r&&!l)) {
                 translate([WALL_THICKNESS+(width/2), WALL_THICKNESS+(width/2), BASE_HEIGHT]) {
                     sphere(width/2);
                 }
