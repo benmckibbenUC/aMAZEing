@@ -4,8 +4,11 @@
 
 import time
 import BaseHTTPServer
+import cgi
+from random import randrange
 from urlparse import urlparse, parse_qs
 from mazeGeneration import Maze
+from stlGeneration import stlMazeWriter
 
 HOST_NAME = 'localhost'
 PORT_NUMBER = 8080
@@ -43,6 +46,34 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             else:
                 s.wfile.write('Missing d and w query parameters.')
                 return
+        s.send404()
+
+    def do_POST(s):
+        """Respond to a POST request."""
+        # respond to POST request with "maze" and possible "marble" as form parameters
+        if s.path.startswith('/stl'):
+            form = cgi.FieldStorage(headers=s.headers, fp=s.rfile,
+               environ={'REQUEST_METHOD':'POST',
+               'CONTENT_TYPE':s.headers['Content-Type']})
+            mazeSerialized = form.getfirst('maze', None)
+            marble_width = int(form.getfirst('marble', '10'))
+            if not mazeSerialized:
+                s.wfile.write('No maze recieved.')
+                return
+            try:
+                maze = Maze.deserialize(mazeSerialized)
+                writer = stlMazeWriter(maze, marble_width)
+                filename = str(randrange(0,10000)) # get random filename
+                path = writer.writeSTL(filename)
+                with open(path, 'rb') as stlFile:
+                    s.wfile.write(stlFile.read())
+                return
+            except Exception as e:
+                s.wfile.write(str(e)+'\n')
+                s.wfile.write('Recieved parameters:\n')
+                s.wfile.write(mazeSerialized + '\n')
+                s.wfile.write('Marble width (defaults to 10): ' + str(marble_width))
+            return
         s.send404()
 
 if __name__ == '__main__':
