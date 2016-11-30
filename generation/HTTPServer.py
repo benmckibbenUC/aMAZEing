@@ -56,7 +56,10 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                environ={'REQUEST_METHOD':'POST',
                'CONTENT_TYPE':s.headers['Content-Type']})
             mazeSerialized = form.getfirst('maze', None)
-            marble_width = int(form.getfirst('marble', '10'))
+            try:
+                marble_width = int(form.getfirst('marble', '10'))
+            except ValueError:
+                marble_width = 10
             if not mazeSerialized:
                 s.wfile.write('No maze recieved.')
                 return
