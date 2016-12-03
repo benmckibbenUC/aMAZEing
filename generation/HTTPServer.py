@@ -4,7 +4,6 @@
 
 import time
 import BaseHTTPServer
-import cgi
 from random import randrange
 from urlparse import urlparse, parse_qs
 from mazeGeneration import Maze
@@ -52,19 +51,19 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         """Respond to a POST request."""
         # respond to POST request with "maze" and possible "marble" as form parameters
         if s.path.startswith('/stl'):
-            form = cgi.FieldStorage(headers=s.headers, fp=s.rfile,
-               environ={'REQUEST_METHOD':'POST',
-               'CONTENT_TYPE':s.headers['Content-Type']})
-            mazeSerialized = form.getfirst('maze', None)
+            raw_data = s.rfile.read(int(s.headers['Content-Length']))
+            post_data = json.loads(raw_data)
             try:
-                marble_width = int(form.getfirst('marble', '10'))
-            except ValueError:
-                marble_width = 10
-            if not mazeSerialized:
+                maze_serialized = post_data['maze']
+            except KeyError:
                 s.wfile.write('No maze recieved.')
                 return
             try:
-                maze = Maze.deserialize(mazeSerialized)
+                marble_width = post_data['marble']
+            except KeyError:
+                marble_width = 10
+            try:
+                maze = Maze.deserialize(maze_serialized)
                 writer = stlMazeWriter(maze, marble_width)
                 filename = str(randrange(0,10000)) # get random filename
                 path = writer.writeSTL(filename)
@@ -74,7 +73,7 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             except Exception as e:
                 s.wfile.write(str(e)+'\n')
                 s.wfile.write('Recieved parameters:\n')
-                s.wfile.write(mazeSerialized + '\n')
+                s.wfile.write(maze_serialized + '\n')
                 s.wfile.write('Marble width (defaults to 10): ' + str(marble_width))
             return
         s.send404()
