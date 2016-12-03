@@ -4,6 +4,7 @@
 
 import time
 import BaseHTTPServer
+import json
 from random import randrange
 from urlparse import urlparse, parse_qs
 from mazeGeneration import Maze
