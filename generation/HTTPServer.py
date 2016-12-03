@@ -74,10 +74,11 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 maze = Maze.deserialize(maze_serialized)
                 writer = stlMazeWriter(maze, marble_width)
                 filename = str(randrange(0,10000)) # get random filename
+                print time.asctime(), 'Received POST /stl, generating maze ' + filename + '...'
                 path = writer.writeSTL(filename)
                 with open(path, 'rb') as stlFile:
                     s.wfile.write(stlFile.read())
-                print time.asctime(), 'Received POST /stl, returned maze ' + filename
+                print time.asctime(), 'Returned maze ' + filename
                 return
             except Exception as e:
                 error_msg = str(e)+'\n'
