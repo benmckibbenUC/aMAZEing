@@ -33,17 +33,23 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             query = parse_qs(urlparse(s.path).query)
             if 'd' in query and 'w' in query:
                 try:
-                    newMaze = Maze(int(query['d'][0]), int(query['w'][0]))
+                    d = query['d'][0]
+                    w = query['w'][0]
+                    newMaze = Maze(int(d), int(w))
                     newMaze.generate()
                     newMaze.validate()
                     s.wfile.write(newMaze.serialize())
+                    print time.asctime(), 'Received GET /generate, returned ' + 'x'.join([d,w]) + ' maze.'
                 except Exception as e:
-                    s.wfile.write(str(e)+'\n')
-                    s.wfile.write('Recieved parameters:\n')
-                    s.wfile.write(str(query))
+                    error_msg = str(e)+'\n'
+                    error_msg += 'Recieved parameters:\n'
+                    error_msg += str(query)
+                    s.wfile.write(error_msg)
+                    print time.asctime(), 'Received GET /generate. Exception raised:\n' + error_msg
                 return   
             else:
                 s.wfile.write('Missing d and w query parameters.')
+                print time.asctime(), 'Received GET /generate, d and w query parameters missing.'
                 return
         s.send404()
 
@@ -56,6 +62,7 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             try:
                 maze_serialized = post_data['maze']
             except KeyError:
+                print time.asctime(), 'Received POST /stl, no maze recieved. Raw data:\n' + raw_data
                 s.wfile.write('No maze recieved.')
                 return
             try:
@@ -69,12 +76,15 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 path = writer.writeSTL(filename)
                 with open(path, 'rb') as stlFile:
                     s.wfile.write(stlFile.read())
+                print time.asctime(), 'Received POST /stl, returned maze ' + filename
                 return
             except Exception as e:
-                s.wfile.write(str(e)+'\n')
-                s.wfile.write('Recieved parameters:\n')
-                s.wfile.write(maze_serialized + '\n')
-                s.wfile.write('Marble width (defaults to 10): ' + str(marble_width))
+                error_msg = str(e)+'\n'
+                error_msg += 'Recieved parameters:\n'
+                error_msg += maze_serialized + '\n'
+                error_msg += 'Marble width (defaults to 10): ' + str(marble_width)
+                s.wfile.write(error_msg)
+                print time.asctime(), 'Received POST /stl. Exception raised:\n' + error_msg
             return
         s.send404()
 
