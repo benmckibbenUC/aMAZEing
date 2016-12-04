@@ -3,17 +3,18 @@
 # aMAZEing
 
 import time
-import BaseHTTPServer
 import json
+from SocketServer import ThreadingMixIn
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from random import randrange
 from urlparse import urlparse, parse_qs
 from mazeGeneration import Maze
 from stlGeneration import stlMazeWriter
 
-HOST_NAME = 'localhost'
-PORT_NUMBER = 8080
+HOST_NAME = ''
+PORT_NUMBER = 9000
 
-class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class MyHandler(BaseHTTPRequestHandler):
 
     def send404(s):
         s.send_response(404)
@@ -90,8 +91,12 @@ class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             return
         s.send404()
 
+# thanks https://pymotw.com/2/BaseHTTPServer/index.html#module-BaseHTTPServer
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
+
 if __name__ == '__main__':
-    server_class = BaseHTTPServer.HTTPServer
+    server_class = ThreadedHTTPServer
     httpd = server_class((HOST_NAME, PORT_NUMBER), MyHandler)
     print time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, PORT_NUMBER)
     try:
