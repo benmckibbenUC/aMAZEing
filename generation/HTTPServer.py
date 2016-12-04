@@ -11,8 +11,8 @@ from urlparse import urlparse, parse_qs
 from mazeGeneration import Maze
 from stlGeneration import stlMazeWriter
 
-HOST_NAME = 'localhost'
-PORT_NUMBER = 8080
+HOST_NAME = ''
+PORT_NUMBER = 9000
 
 class MyHandler(BaseHTTPRequestHandler):
 
