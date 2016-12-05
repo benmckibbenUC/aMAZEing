@@ -4,6 +4,7 @@
 
 import time
 import json
+import os
 from SocketServer import ThreadingMixIn
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from random import randrange
@@ -80,6 +81,8 @@ class MyHandler(BaseHTTPRequestHandler):
                 with open(path, 'rb') as stlFile:
                     s.wfile.write(stlFile.read())
                 print time.asctime(), 'Returned maze ' + filename
+                os.remove(path)
+                os.remove(path.replace('.stl', '.scad'))
                 return
             except Exception as e:
                 error_msg = str(e)+'\n'
