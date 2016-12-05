@@ -30,8 +30,8 @@ class stlMazeWriter():
         for row in self.maze.tiles:
             scadFile.write("\n\trender() union() {")
             for tile in row:
-                x_offset = str(tile.y) + " * (" + str(self.tileWidth) + "+(2*WALL_THICKNESS))"
-                y_offset = str(self.maze.depth - tile.x - 1) + " * (" + str(self.tileWidth) + "+(2*WALL_THICKNESS))"
+                x_offset = str(tile.y) + " * (" + str(self.tileWidth) + "+WALL_THICKNESS)"
+                y_offset = str(self.maze.depth - tile.x - 1) + " * (" + str(self.tileWidth) + "+WALL_THICKNESS)"
                 scadFile.write("\n")
                 scadFile.write("\t\ttranslate([" + x_offset + ", " + y_offset + ", 0]) {\n")
                 scadFile.write("\t\t\ttile(" + str(self.tileWidth) + ", u=" + str(tile.walls['U']) + ", r=" + str(tile.walls['R']) + ", d=" + str(tile.walls['D']) + ", l=" + str(tile.walls['L']) + ");\n")
