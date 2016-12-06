@@ -4,7 +4,6 @@ Final project for Digital Fabrication
 =======
 ## Dependencies
 - [Python 2.7](https://www.python.org/downloads/release/python-2712/) (no third-party package dependencies)
-- [OpenSCAD](http://www.openscad.org/downloads.html)
 
 ## Server Usage
 ```
