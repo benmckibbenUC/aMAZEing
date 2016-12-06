@@ -25,6 +25,14 @@ class MyHandler(BaseHTTPRequestHandler):
         s.wfile.write("<p>Sorry, page not found.</p>")
         s.wfile.write("</body></html>")
 
+    def send500(s):
+        s.send_response(500)
+        s.send_header("Content-type", "text/html")
+        s.end_headers()
+        s.wfile.write("<html><head><title>500 | aMAZEing Maze Generator</title></head>")
+        s.wfile.write("<p>Sorry, internal server error occured.</p>")
+        s.wfile.write("</body></html>")
+
     def do_HEAD(s):
         s.send_response(200)
         s.send_header("Content-type", "text/html")
@@ -47,12 +55,12 @@ class MyHandler(BaseHTTPRequestHandler):
                     error_msg = str(e)+'\n'
                     error_msg += 'Recieved parameters:\n'
                     error_msg += str(query)
-                    s.wfile.write(error_msg)
                     print time.asctime(), 'Received GET /generate. Exception raised:\n' + error_msg
+                    s.send500()
                 return   
             else:
-                s.wfile.write('Missing d and w query parameters.')
                 print time.asctime(), 'Received GET /generate, d and w query parameters missing.'
+                s.send500()
                 return
         s.send404()
 
@@ -66,7 +74,7 @@ class MyHandler(BaseHTTPRequestHandler):
                 maze_serialized = post_data['maze']
             except KeyError:
                 print time.asctime(), 'Received POST /stl, no maze recieved. Raw data:\n' + raw_data
-                s.wfile.write('No maze recieved.')
+                s.send500()
                 return
             try:
                 marble_width = post_data['marble']
@@ -89,8 +97,8 @@ class MyHandler(BaseHTTPRequestHandler):
                 error_msg += 'Recieved parameters:\n'
                 error_msg += maze_serialized + '\n'
                 error_msg += 'Marble width (defaults to 10): ' + str(marble_width)
-                s.wfile.write(error_msg)
                 print time.asctime(), 'Received POST /stl. Exception raised:\n' + error_msg
+                s.send500()
             return
         s.send404()
 
