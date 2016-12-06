@@ -2,8 +2,8 @@ WALL_THICKNESS = 2.5;
 False = false;
 True = true;
 
-module tile (width=12, u=false, r=false, d=false, l=false) {
-    wall_height = width * .75;
+module tile (width=12, u=false, d=false, l=false, r=false) {
+    wall_height = width;
     base_height = (width < 12) ? 3 : width * .25;
 
     union() {
@@ -17,11 +17,6 @@ module tile (width=12, u=false, r=false, d=false, l=false) {
                     cube([width+(2*WALL_THICKNESS), WALL_THICKNESS, wall_height]);
                 }
             }
-            if (r) {
-                translate([width+WALL_THICKNESS, 0, base_height-1]) {
-                    cube([WALL_THICKNESS, width+(2*WALL_THICKNESS), wall_height]);
-                }
-            }
             if (d) {
                 translate([0,0,base_height-1]) {
                     cube([width+(2*WALL_THICKNESS), WALL_THICKNESS, wall_height]);
@@ -29,6 +24,11 @@ module tile (width=12, u=false, r=false, d=false, l=false) {
             }
             if (l) {
                 translate([0,0,base_height-1]) {
+                    cube([WALL_THICKNESS, width+(2*WALL_THICKNESS), wall_height]);
+                }
+            }
+            if (r) {
+                translate([width+WALL_THICKNESS, 0, base_height-1]) {
                     cube([WALL_THICKNESS, width+(2*WALL_THICKNESS), wall_height]);
                 }
             }
