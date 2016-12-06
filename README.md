@@ -5,6 +5,12 @@ Final project for Digital Fabrication
 ## Dependencies
 - [Python 2.7](https://www.python.org/downloads/release/python-2712/) (no third-party package dependencies)
 
+## Included Files
+- [`generation`](generation)
+  - [`HTTPServer.py`](generation/HTTPServer.py): Code for the maze and STL generation server.
+  - [`mazeGeneration.py`](generation/mazeGeneration.py): Classes that define and generate mazes and their components.
+  - [`stlGeneration.py`](generation/stlGeneration.py): Classes that work with the [`Maze`](generation/mazeGeneration.py#L43) class to generate STL files.
+
 ## Server Usage
 ```
 cd generation
