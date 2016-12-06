@@ -90,7 +90,6 @@ class MyHandler(BaseHTTPRequestHandler):
                     s.wfile.write(stlFile.read())
                 print time.asctime(), 'Returned maze ' + filename
                 os.remove(path)
-                os.remove(path.replace('.stl', '.scad'))
                 return
             except Exception as e:
                 error_msg = str(e)+'\n'
