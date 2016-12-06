@@ -13,8 +13,8 @@ class stlMazeWriter():
         self.tileWidth = marble_width + 2
 
     def writeSTL(self, filename):
-        #return self.writeSTLManually(filename)
-        return self.writeSTLFromSCAD(filename)
+        return self.writeSTLManually(filename)
+        #return self.writeSTLFromSCAD(filename)
 
     # writes STL and returns the file path
     def writeSTLFromSCAD(self, filename):
@@ -46,7 +46,7 @@ class stlMazeWriter():
         scadFile.close()
 
         # generate STL file using OpenSCAD
-        system('openscad -o ' + stlFilename + ' ' + scadFilename + ' >nul 2>&1')
+        system('openscad -o ' + stlFilename + ' ' + scadFilename)
 
         return stlFilename
 
