@@ -8,7 +8,7 @@ Final project for Digital Fabrication
 ## Included Files
 - [`generation`](generation)
   - [`HTTPServer.py`](generation/HTTPServer.py): Code for the maze and STL generation server.
-  - [`mazeGeneration.py`](generation/mazeGeneration.py): Classes that define and generate mazes and their components.
+  - [`mazeGeneration.py`](generation/mazeGeneration.py): Classes that define and generate mazes and their components. Can also be run as a script: `python mazeGeneration.py` will print a help message detailing the commands you can run to use this module for stand-alone generation.
   - [`stlGeneration.py`](generation/stlGeneration.py): Classes that work with the [`Maze`](generation/mazeGeneration.py#L43) class to generate STL files.
 - [`mazes`](mazes)
   - [`modules`](mazes/modules)
