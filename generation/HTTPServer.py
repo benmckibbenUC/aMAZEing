@@ -7,7 +7,6 @@ import json
 import os
 from SocketServer import ThreadingMixIn
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from random import randrange
 from urlparse import urlparse, parse_qs
 from mazeGeneration import Maze
 from stlGeneration import stlMazeWriter
@@ -82,14 +81,11 @@ class MyHandler(BaseHTTPRequestHandler):
                 marble_width = 10
             try:
                 maze = Maze.deserialize(maze_serialized)
+                dimension_str = 'x'.join(map(str, [maze.depth, maze.width]))
                 writer = stlMazeWriter(maze, marble_width)
-                filename = str(randrange(0,10000)) # get random filename
-                print time.asctime(), 'Received POST /stl, generating maze ' + filename + '...'
-                path = writer.writeSTL(filename)
-                with open(path, 'rb') as stlFile:
-                    s.wfile.write(stlFile.read())
-                print time.asctime(), 'Returned maze ' + filename
-                os.remove(path)
+                print time.asctime(), 'Received POST /stl, generating ' + dimension_str + ' maze...'
+                s.wfile.write(writer.writeSTL())
+                print time.asctime(), 'Returned ' + dimension_str + ' maze.'
                 return
             except Exception as e:
                 error_msg = str(e)+'\n'
