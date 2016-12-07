@@ -98,9 +98,20 @@ def addStrings(string, number):
 
 
 if __name__ == '__main__':
-    newMaze = Maze(25, 25)
+    x = 25
+    y = 25
+    if len(sys.argv) > 2:
+        x = sys.argv[1]
+        y = sys.argv[2]
+
+    newMaze = Maze(x,y)
     newMaze.generate()
     newMaze.validate()
-
-    writer = stlMazeWriter(newMaze, 5)
-    writer.writeSTL('test7')
+    writer = stlMazeWriter(newMaze, 15)
+    if len(sys.argv) > 3:
+        if argv[3] == 'scad':
+            writer.writeSTLFromSCAD('fromSCAD')
+        else if argv[3] == 'manual':
+            writer.writeSTLManually('manual')
+    else:
+        writer.writeSTL('default')
