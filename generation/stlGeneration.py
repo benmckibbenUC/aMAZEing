@@ -4,6 +4,7 @@
 # aMAZEing
 
 import sys
+import timeit
 from os import path, system
 from mazeGeneration import Maze
 
@@ -46,7 +47,7 @@ class stlMazeWriter():
         scadFile.close()
 
         # generate STL file using OpenSCAD
-        system('openscad -o ' + stlFilename + ' ' + scadFilename)
+        system('openscad -o ' + stlFilename + ' ' + scadFilename + ' >&- 2>&-')
 
         return stlFilename
 
@@ -101,17 +102,19 @@ if __name__ == '__main__':
     x = 25
     y = 25
     if len(sys.argv) > 2:
-        x = sys.argv[1]
-        y = sys.argv[2]
+        x = int(sys.argv[1])
+        y = int(sys.argv[2])
 
     newMaze = Maze(x,y)
     newMaze.generate()
     newMaze.validate()
     writer = stlMazeWriter(newMaze, 15)
     if len(sys.argv) > 3:
-        if argv[3] == 'scad':
-            writer.writeSTLFromSCAD('fromSCAD')
-        else if argv[3] == 'manual':
-            writer.writeSTLManually('manual')
+        if sys.argv[3] == 'scad':
+            times = timeit.Timer("writer.writeSTLFromSCAD('fromSCAD')", "from __main__ import writer").repeat(1, 1)
+            print('Best Average using SCAD Method: ' + str(min(times)))
+        elif sys.argv[3] == 'manual':
+            times = timeit.Timer("writer.writeSTLManually('manual')", "from __main__ import writer").repeat(3, 5)
+            print('Best Average using Manual STL Manipulation Method: ' + str(min(times) / 5))
     else:
         writer.writeSTL('default')
