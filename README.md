@@ -10,6 +10,13 @@ Final project for Digital Fabrication
   - [`HTTPServer.py`](generation/HTTPServer.py): Code for the maze and STL generation server.
   - [`mazeGeneration.py`](generation/mazeGeneration.py): Classes that define and generate mazes and their components.
   - [`stlGeneration.py`](generation/stlGeneration.py): Classes that work with the [`Maze`](generation/mazeGeneration.py#L43) class to generate STL files.
+- [`mazes`](mazes)
+  - [`modules`](mazes/modules)
+    - [`tiles.scad`](mazes/modules/tiles.scad): OpenSCAD module for concave tile object
+    - [`tiles2.scad`](mazes/modules/tiles2.scad): OpenSCAD module for simple tile object with walls
+- [`resources`](resources)
+  - [`tileSTL`](resources/tileSTL): STL files for all 16 kinds of tiles per marble size
+  - [`generateTiles.py`](resources/generateTiles.py): Creates the STL files for all possible tiles
 
 ## Server Usage
 ```
@@ -24,3 +31,8 @@ This starts the HTTP server for generating mazes and STL files for mazes.
 
 ## iOS Companion App
 The [iOS app](https://github.com/eeevanbbb/Maze4Daze) fetches new mazes from the server, simulates them on the device, and allows the user to adjust parameters and send to the printer.
+
+## STL Generation
+The STL generation file contains two STL writing methods:
+  - `writeSTLFromSCAD`: creates an OpenSCAD file of the maze and then renders it with OpenSCAD
+  - `writeSTLManually`: directly generates the text for an STL file from the base tiles found in resources/tileSTL
