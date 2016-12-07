@@ -13,8 +13,8 @@ class stlMazeWriter():
         self.maze = maze
         self.tileWidth = marble_width + 2
 
-    def writeSTL(self, filename):
-        return self.writeSTLManually(filename)
+    def writeSTL(self, filename=None):
+        return self.writeSTLManually()
         #return self.writeSTLFromSCAD(filename)
 
     # writes STL and returns the file path
@@ -51,24 +51,17 @@ class stlMazeWriter():
 
         return stlFilename
 
-    def writeSTLManually(self, filename):
-        # write paths
-        head, tail = path.split(path.abspath(sys.argv[0]))
-        stlFilename = path.join(head, '../mazes/' + filename + '.stl')
-        stlFile = open(stlFilename, 'w')
-
+    def writeSTLManually(self):
         serialMaze = self.maze.serialize()
         serialSplit = serialMaze.split('\n')
 
-        stlFile.write('solid aMAZEing_Maze\n')
+        result = 'solid aMAZEing_Maze\n'
         for j in range(1, len(serialSplit)-1):
             for i, char in enumerate(list(serialSplit[j])):
                 tileStl = getTileStl(self.tileWidth, int(char, 16), i, (self.maze.depth - j))
-                stlFile.write(tileStl)
-        stlFile.write('endsolid aMAZEing_Maze\n')
-
-        stlFile.close()
-        return stlFilename
+                result += tileStl
+        result += 'endsolid aMAZEing_Maze\n'
+        return result
 
 def getTileStl(tileWidth=12, hexTile=0, x=0, y=0):
     head, tail = path.split(path.abspath(sys.argv[0]))
@@ -114,7 +107,7 @@ if __name__ == '__main__':
             times = timeit.Timer("writer.writeSTLFromSCAD('fromSCAD')", "from __main__ import writer").repeat(1, 1)
             print('Best Average using SCAD Method: ' + str(min(times)))
         elif sys.argv[3] == 'manual':
-            times = timeit.Timer("writer.writeSTLManually('manual')", "from __main__ import writer").repeat(3, 5)
+            times = timeit.Timer("writer.writeSTLManually()", "from __main__ import writer").repeat(3, 5)
             print('Best Average using Manual STL Manipulation Method: ' + str(min(times) / 5))
     else:
         writer.writeSTL('default')
